@@ -1,9 +1,6 @@
 package ru.alexzmeu.otus.java.httpserver;
 
-import ru.alexzmeu.otus.java.httpserver.processors.HelloWorldRequestProcessor;
-import ru.alexzmeu.otus.java.httpserver.processors.OperationAddRequestProcessor;
-import ru.alexzmeu.otus.java.httpserver.processors.RequestProcessor;
-import ru.alexzmeu.otus.java.httpserver.processors.UnknownRequestProcessor;
+import ru.alexzmeu.otus.java.httpserver.processors.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,16 +13,17 @@ public class Dispatcher {
 
     public Dispatcher() {
         this.router = new HashMap<>();
-        this.router.put("/add", new OperationAddRequestProcessor());
-        this.router.put("/hello_world", new HelloWorldRequestProcessor());
+        this.router.put("GET /add", new OperationAddRequestProcessor());
+        this.router.put("GET /hello_world", new HelloWorldRequestProcessor());
+        this.router.put("POST /body", new PostBodyDemoRequestProcessor());
         this.unknownRequestProcessor = new UnknownRequestProcessor();
     }
 
     public void execute(HttpRequest httpRequest, OutputStream output) throws IOException {
-        if (!router.containsKey(httpRequest.getUri())) {
+        if (!router.containsKey(httpRequest.getRoute())) {
             unknownRequestProcessor.execute(httpRequest, output);
             return;
         }
-        router.get(httpRequest.getUri()).execute(httpRequest, output);
+        router.get(httpRequest.getRoute()).execute(httpRequest, output);
     }
 }

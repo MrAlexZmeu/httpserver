@@ -44,9 +44,11 @@ public class HttpServer {
     public void executeRequest(Socket socket) throws IOException {
         byte[] buffer = new byte[8192];
         int n = socket.getInputStream().read(buffer);
-        String rawRequest = new String(buffer, 0, n);
-        HttpRequest httpRequest = new HttpRequest(rawRequest);
-        dispatcher.execute(httpRequest, socket.getOutputStream());
+        if (n > 0) {
+            String rawRequest = new String(buffer, 0, n);
+            HttpRequest httpRequest = new HttpRequest(rawRequest);
+            dispatcher.execute(httpRequest, socket.getOutputStream());
+        }
 
         try {
             if (socket != null) {

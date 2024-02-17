@@ -29,7 +29,10 @@ public class Product {
         this.category = category;
     }
 
-    public Product() {
+    public Product(Long id, String title, Category category) {
+        this.id = id;
+        this.title = title;
+        this.category = category;
     }
 
     @Override
